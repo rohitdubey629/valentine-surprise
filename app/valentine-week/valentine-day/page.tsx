@@ -5,9 +5,12 @@ import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti"
 import { useMusic } from "@/components/music-provider"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+
 
 const LOVE_LETTER = [
-  "My Dearest Valentine ❤️",
+  "My Dearest Shreya ❤️",
   "From the moment you entered my life,",
   "You became my favorite person.",
   "Your smile is my sunshine,",
@@ -15,38 +18,33 @@ const LOVE_LETTER = [
   "I promise to cherish you,",
   "To love you more each day,",
   "And to be yours, always.",
-  "Happy Valentine's Day, My Love! 💖"
+  "Happy Valentine's Day, My Love! 💖",
+  "Forever Yours, Rohit 💑"
 ]
 
-const GALLERY_IMAGES = [
-  "/gallery/1.jpg", 
-  "/gallery/2.jpg",
-  "/gallery/3.jpg",
-  // In a real app these would be real paths, here we simulate with placeholders or colors
-]
 
 export default function ValentineDay() {
   const { play } = useMusic()
-  const [currentLine, setCurrentLine] = useState(0)
-  const [showGallery, setShowGallery] = useState(false)
+  const [isGiftOpen, setIsGiftOpen] = useState(false)
+  const [accepted, setAccepted] = useState(false)
 
   useEffect(() => {
     play()
-    
-    // Typewriter effect logic
-    if (currentLine < LOVE_LETTER.length) {
-      const timeout = setTimeout(() => {
-        setCurrentLine(prev => prev + 1)
-      }, 2500)
-      return () => clearTimeout(timeout)
-    } else {
-      setTimeout(() => setShowGallery(true), 1000)
-      fireworks()
-    }
-  }, [currentLine, play])
+  }, [])
 
-  const fireworks = () => {
-    const duration = 5 * 1000;
+  const handleOpenGift = () => {
+    setIsGiftOpen(true)
+    play()
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    })
+  }
+
+  const handleAccept = () => {
+    setAccepted(true)
+    const duration = 15 * 1000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
@@ -69,60 +67,121 @@ export default function ValentineDay() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-rose-950 text-rose-50 text-center">
       
-      {/* Background Overlay */}
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-t from-rose-950 via-transparent to-rose-900/50 pointer-events-none" />
+      {/* Magical Background */}
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-rose-950 via-rose-900/40 to-black/80 pointer-events-none" />
 
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2 }}
-        className="z-10 max-w-4xl w-full p-8 md:p-16 relative"
-      >
-        <div className="mb-12 space-y-6 min-h-[50vh] flex flex-col items-center justify-center">
-          {LOVE_LETTER.slice(0, currentLine + 1).map((line, index) => (
-            <motion.p
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-              className={`text-xl md:text-4xl ${index === 0 || index === LOVE_LETTER.length - 1 ? "font-dancing text-rose-300 font-bold text-3xl md:text-5xl my-4" : "font-serif italic text-rose-100/90"}`}
-            >
-              {line}
-            </motion.p>
-          ))}
-        </div>
+      <AnimatePresence mode="wait">
+        {!isGiftOpen ? (
+          <motion.div
+            key="gift-box"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 2, opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className="z-10 flex flex-col items-center gap-8 cursor-pointer"
+            onClick={handleOpenGift}
+          >
+             <div className="relative group">
+                {/* Glow Effect */}
+                <div className="absolute inset-0 bg-rose-500 rounded-full blur-[100px] opacity-20 group-hover:opacity-40 transition-opacity duration-1000" />
+                
+                <motion.div
+                  animate={{ 
+                    y: [0, -20, 0],
+                    rotate: [0, -5, 5, 0]
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="text-[10rem] md:text-[15rem] relative z-10 drop-shadow-[0_0_50px_rgba(225,29,72,0.5)]"
+                >
+                  🎁
+                </motion.div>
+                
+                <p className="mt-8 text-2xl font-dancing text-rose-200 animate-pulse">
+                  Tap to Open Your Surprise ✨
+                </p>
+             </div>
+          </motion.div>
+        ) : (
+          <motion.div 
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            className="z-10 max-w-4xl w-full p-4 md:p-8 relative"
+          >
+            {!accepted ? (
+              <motion.div
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                <div className="mb-12 space-y-6">
+                  {LOVE_LETTER.map((line, index) => (
+                    <motion.p
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.8 + 0.5, duration: 1 }}
+                      className={`text-xl md:text-3xl ${index === 0 || index === LOVE_LETTER.length - 1 ? "font-dancing text-rose-300 font-bold text-3xl md:text-5xl my-4" : "font-serif italic text-rose-100/90 leading-relaxed"}`}
+                    >
+                      {line}
+                    </motion.p>
+                  ))}
+                </div>
 
-        <AnimatePresence>
-          {showGallery && (
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
-              className="mt-12"
-            >
-              <h2 className="text-3xl font-dancing text-rose-300 mb-8">Our Beautiful Memories</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                 {/* Placeholder for Gallery - using colors for now */}
-                 {[1, 2, 3].map((i) => (
-                   <motion.div
-                     key={i}
-                     whileHover={{ scale: 1.05, rotate: Math.random() * 4 - 2 }}
-                     className="aspect-[4/5] bg-rose-800/50 rounded-2xl border border-rose-700/50 flex items-center justify-center overflow-hidden relative shadow-lg group"
-                   >
-                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
-                        <span className="text-white font-dancing text-xl">Love Memory {i}</span>
-                     </div>
-                     <span className="text-6xl opacity-50">📸</span>
-                   </motion.div>
-                 ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                <motion.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: LOVE_LETTER.length * 0.8 + 1, type: "spring" }}
+                  className="mt-12"
+                >
 
-      </motion.div>
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white text-2xl md:text-3xl py-8 px-12 rounded-full shadow-[0_0_50px_rgba(225,29,72,0.6)] animate-bounce"
+                    onClick={handleAccept}
+                  >
+                    Be My Valentine Forever, Shreya? 💍
+                  </Button>
+                </motion.div>
+              </motion.div>
+            ) : (
+               <motion.div
+                 initial={{ scale: 0.5, opacity: 0 }}
+                 animate={{ scale: 1, opacity: 1 }}
+                 className="flex flex-col items-center justify-center min-h-[50vh] gap-8"
+               >
+                 <h1 className="text-5xl md:text-8xl font-dancing text-rose-400 drop-shadow-[0_0_20px_rgba(251,113,133,0.8)]">
+                   I Love You Shreya! ❤️
+                 </h1>
+
+                 <p className="text-2xl text-rose-200/80 font-serif">
+                   You are the best thing that ever happened to me.
+                 </p>
+                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                    {/* Floating Memories */}
+                    {[1,2,3,4].map((i) => (
+                      <motion.div 
+                        key={i}
+                        animate={{ y: [0, -20, 0] }}
+                        transition={{ delay: i * 0.2, duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        className="w-32 h-40 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 flex items-center justify-center text-4xl"
+                      >
+                        📸
+                      </motion.div>
+                    ))}
+                 </div>
+               </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
+

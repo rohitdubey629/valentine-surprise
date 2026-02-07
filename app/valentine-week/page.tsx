@@ -51,10 +51,23 @@ export default function ValentineWeekPage() {
       >
         {VALENTINE_WEEK_DATA.map((day, index) => {
           // Check if unlocked: if current date is same or after the day's date
-          const unlockDate = parseISO(day.date)
-          // For testing, we can uncomment below to unlock all
-          // const isUnlocked = true 
-          const isUnlocked = !isBefore(startOfDay(currentDate), startOfDay(unlockDate))
+
+          // Check if it's the special Memories page or a regular dated page
+          const isMemories = day.path.includes("memories")
+          let isUnlocked = isMemories
+          let displayDate = day.date
+
+          if (!isMemories) {
+            const unlockDate = parseISO(day.date)
+            // Allow unlocking if date has passed or is today
+            isUnlocked = !isBefore(startOfDay(currentDate), startOfDay(unlockDate))
+            try {
+              displayDate = format(unlockDate, "MMMM d, yyyy")
+            } catch (e) {
+              displayDate = day.date
+            }
+          }
+
 
           return (
             <motion.div key={index} variants={item} whileHover={isUnlocked ? { scale: 1.05 } : {}}>
@@ -69,7 +82,9 @@ export default function ValentineWeekPage() {
                   
                   <CardContent className="p-6 text-center space-y-2">
                     <h2 className="text-2xl font-bold text-gray-800">{day.title}</h2>
-                    <p className="text-sm text-gray-500 font-medium">{format(parseISO(day.date), "MMMM d, yyyy")}</p>
+
+                    <p className="text-sm text-gray-500 font-medium">{displayDate}</p>
+
                     
                     {isUnlocked ? (
                       <p className="text-rose-600 mt-2 font-medium">{day.description}</p>

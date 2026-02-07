@@ -1,7 +1,8 @@
 
 "use client"
 
-import { useState } from "react"
+
+import { useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti"
 import { Check, HandHeart } from "lucide-react"
@@ -16,6 +17,9 @@ const PROMISES = [
 
 export default function PromiseDay() {
   const [checkedPromises, setCheckedPromises] = useState<number[]>([])
+  const [isScanning, setIsScanning] = useState(false)
+  const [isScannerComplete, setIsScannerComplete] = useState(false)
+  const scanTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const togglePromise = (index: number) => {
     if (checkedPromises.includes(index)) {
@@ -35,6 +39,27 @@ export default function PromiseDay() {
 
   const allChecked = checkedPromises.length === PROMISES.length
 
+  const handleTouchStart = () => {
+    if (isScannerComplete) return
+    setIsScanning(true)
+    
+    // Start 2s timer
+    scanTimerRef.current = setTimeout(() => {
+      setIsScanning(false)
+      setIsScannerComplete(true)
+      handleFinalPromise()
+    }, 2000)
+  }
+
+  const handleTouchEnd = () => {
+    if (isScannerComplete) return
+    setIsScanning(false)
+    if (scanTimerRef.current) {
+      clearTimeout(scanTimerRef.current)
+      scanTimerRef.current = null
+    }
+  }
+
   const handleFinalPromise = () => {
     confetti({
       particleCount: 200,
@@ -43,6 +68,7 @@ export default function PromiseDay() {
       colors: ['#3b82f6', '#1e40af', '#60a5fa']
     })
   }
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-blue-50">
@@ -61,7 +87,8 @@ export default function PromiseDay() {
           <p className="text-blue-800/80 mt-2 italic">Check each promise to seal it!</p>
         </div>
 
-        <div className="space-y-4">
+
+        <div className="space-y-4 relative z-20">
           {PROMISES.map((promise, index) => {
             const isChecked = checkedPromises.includes(index)
             return (
@@ -88,18 +115,78 @@ export default function PromiseDay() {
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              className="pt-4 text-center"
+              className="pt-4 flex flex-col items-center gap-4"
             >
-              <Button 
-                size="lg" 
-                className="bg-blue-600 hover:bg-blue-700 text-white text-xl px-10 py-6 rounded-full shadow-blue-500/30 shadow-lg w-full animate-bounce"
-                onClick={handleFinalPromise}
-              >
-                I Promise Forever! 💙
-              </Button>
+              {!isScannerComplete ? (
+                <div 
+                  className="relative group cursor-pointer"
+                  onMouseDown={handleTouchStart}
+                  onMouseUp={handleTouchEnd}
+                  onMouseLeave={handleTouchEnd}
+                  onTouchStart={handleTouchStart}
+                  onTouchEnd={handleTouchEnd}
+                >
+                  <div className={`w-24 h-24 rounded-full border-4 ${isScanning ? "border-blue-500 animate-pulse" : "border-gray-300"} flex items-center justify-center bg-blue-50 relative overflow-hidden`}>
+                     {/* Scanning Line */}
+                     {isScanning && (
+                       <motion.div 
+                         layoutId="scanner"
+                         className="absolute top-0 left-0 w-full h-1 bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]"
+                         animate={{ top: ["0%", "100%", "0%"] }}
+                         transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                       />
+                     )}
+                     <span className="text-4xl text-blue-300 select-none">☝️</span>
+                  </div>
+                  
+                  {/* Progress Ring */}
+                  {isScanning && (
+                    <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none scale-110">
+                      <circle
+                        cx="50%"
+                        cy="50%"
+                        r="45%"
+                        fill="transparent"
+                        stroke="#e0e7ff"
+                        strokeWidth="4"
+                      />
+                      <motion.circle
+                        cx="50%"
+                        cy="50%"
+                        r="45%"
+                        fill="transparent"
+                        stroke="#3b82f6"
+                        strokeWidth="4"
+                        strokeDasharray="283"
+                        strokeDashoffset="283"
+                        animate={{ strokeDashoffset: 0 }}
+                        transition={{ duration: 2, ease: "linear" }}
+                      />
+                    </svg>
+                  )}
+                  
+                  <p className="mt-4 text-blue-600 font-semibold animate-bounce">
+                    {isScanning ? "Scanning... Hold Still" : "Hold Finger to Seal Promise"}
+                  </p>
+                </div>
+              ) : (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="text-center space-y-2"
+                >
+                   <div className="text-6xl mb-2">🔒</div>
+                   <h3 className="text-2xl font-dancing font-bold text-blue-600">Promise Sealed!</h3>
+                   <div className="bg-blue-100 p-4 rounded-lg border border-blue-200 mt-2">
+                     <p className="font-serif italic text-blue-900">"Forever and Always"</p>
+                     <p className="text-right text-xs mt-2 text-blue-400">Digitally Verified</p>
+                   </div>
+                </motion.div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
+
 
       </motion.div>
     </div>

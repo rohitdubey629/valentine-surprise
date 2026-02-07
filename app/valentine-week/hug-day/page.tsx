@@ -1,20 +1,65 @@
 
 "use client"
 
-import { useEffect } from "react"
-import { motion } from "framer-motion"
+import { useEffect, useState, useRef } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import confetti from "canvas-confetti"
 import { useMusic } from "@/components/music-provider"
+import { Button } from "@/components/ui/button"
 
 export default function HugDay() {
   const { play } = useMusic()
+  const [hugStatus, setHugStatus] = useState("idle") // idle, charging, sent
+  const [hugDuration, setHugDuration] = useState(0)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Ensure music is playing for the mood
+  // Ensure music is playing
   useEffect(() => {
     play()
   }, [])
 
+  const startHug = () => {
+    setHugStatus("charging")
+    setHugDuration(0)
+    timerRef.current = setInterval(() => {
+      setHugDuration(prev => prev + 0.1)
+    }, 100)
+  }
+
+  const releaseHug = () => {
+    if (hugStatus !== "charging") return
+    
+    if (timerRef.current) {
+      clearInterval(timerRef.current)
+      timerRef.current = null
+    }
+
+    setHugStatus("sent")
+    
+    if (hugDuration > 3) {
+      // Massive hug
+      confetti({
+        particleCount: 150,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ['#fbbf24', '#f59e0b', '#d97706']
+      })
+    } else {
+      confetti({
+        particleCount: 50,
+        origin: { y: 0.6 }
+      })
+    }
+
+    // Reset after delay
+    setTimeout(() => {
+      setHugStatus("idle")
+      setHugDuration(0)
+    }, 3000)
+  }
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-yellow-50 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-yellow-50 text-center select-none">
 
       {/* Heartbeat Background */}
       <motion.div
@@ -29,44 +74,85 @@ export default function HugDay() {
         transition={{ duration: 0.8 }}
         className="z-10 bg-white/60 backdrop-blur-xl p-12 rounded-[3rem] shadow-2xl border-4 border-yellow-200 max-w-4xl w-full flex flex-col items-center justify-center gap-12"
       >
-        <h1 className="text-5xl md:text-8xl font-dancing text-yellow-600 drop-shadow-sm">
+        <h1 className="text-4xl md:text-7xl font-dancing text-yellow-600 drop-shadow-sm">
           A Big Warm Hug 🤗
         </h1>
 
-        <div className="relative text-[12rem] md:text-[16rem] leading-none">
+        <div className="relative h-[20rem] flex items-center justify-center">
           <motion.div
-            initial={{ x: -100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 1, type: "spring" }}
-            className="inline-block relative z-10"
+            animate={{ 
+              scale: hugStatus === "charging" ? 1 + (hugDuration * 0.2) : 1,
+              opacity: hugStatus === "sent" ? 0 : 1
+            }}
+            transition={{ type: "spring", stiffness: 200, damping: 10 }}
+            className="text-[10rem] md:text-[14rem] z-10 cursor-pointer"
+            onMouseDown={startHug}
+            onMouseUp={releaseHug}
+            onMouseLeave={releaseHug}
+            onTouchStart={startHug}
+            onTouchEnd={releaseHug}
           >
             🫂
           </motion.div>
           
+          {/* Shockwave effect */}
+          <AnimatePresence>
+            {hugStatus === "sent" && (
+              <motion.div
+                initial={{ scale: 1, opacity: 0.8, border: "4px solid #f59e0b" }}
+                animate={{ scale: 3, opacity: 0, borderWidth: "0px" }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="absolute inset-0 rounded-full bg-yellow-400/30"
+              />
+            )}
+          </AnimatePresence>
+          
           <motion.div
-             className="absolute top-0 right-0 -mr-16 -mt-16 text-6xl"
+             className="absolute top-0 right-0 -mr-10 -mt-10 text-6xl"
              initial={{ scale: 0 }}
-             animate={{ scale: [0, 1.2, 1] }}
-             transition={{ delay: 1, duration: 0.5 }}
+             animate={{ scale: hugStatus === "charging" ? [0, 1.2, 1] : 0 }}
           >
             ❤️
           </motion.div>
         </div>
 
-        <p className="text-2xl md:text-3xl text-yellow-800 font-serif italic max-w-2xl leading-relaxed">
-          "Sometimes a hug is all inside content needed to make everything better. Sending you the warmest hug today and always."
-        </p>
+        <div className="h-12 w-full max-w-md">
+           {hugStatus === "charging" && (
+             <p className="text-2xl font-bold text-yellow-600 animate-pulse">
+               Charging Hug... {hugDuration.toFixed(1)}s
+             </p>
+           )}
+           {hugStatus === "sent" && (
+             <motion.p 
+               initial={{ scale: 0.5, opacity: 0 }}
+               animate={{ scale: 1.5, opacity: 1 }}
+               className="text-3xl font-dancing font-bold text-orange-600"
+             >
+               {hugDuration > 3 ? "MEGA BEAR HUG SENT! 🐻💥" : "Warm Hug Sent! 🤗"}
+             </motion.p>
+           )}
+           {hugStatus === "idle" && (
+             <p className="text-xl text-yellow-800 font-serif italic">
+               Hold the emoji to send a bigger hug!
+             </p>
+           )}
+        </div>
 
-        <motion.div
-           initial={{ opacity: 0 }}
-           animate={{ opacity: 1 }}
-           transition={{ delay: 2, duration: 1 }}
-           className="text-sm text-yellow-600/60 uppercase tracking-widest font-semibold"
+        <Button 
+          size="lg"
+          className="bg-yellow-500 hover:bg-yellow-600 text-white text-xl px-12 py-8 rounded-full shadow-lg"
+          onMouseDown={startHug}
+          onMouseUp={releaseHug}
+          onMouseLeave={releaseHug}
+          onTouchStart={startHug}
+          onTouchEnd={releaseHug}
         >
-          Feel the warmth
-        </motion.div>
+          Hold to Hug 🤗
+        </Button>
 
       </motion.div>
     </div>
   )
 }
+

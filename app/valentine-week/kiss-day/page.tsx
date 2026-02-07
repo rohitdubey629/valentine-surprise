@@ -1,29 +1,65 @@
 
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti"
 import { Button } from "@/components/ui/button"
 
 export default function KissDay() {
   const [kissCount, setKissCount] = useState(0)
+  const [kisses, setKisses] = useState<{id: number, x: number, y: number, rotation: number}[]>([])
+  
+  const handleContainerClick = (e: React.MouseEvent) => {
+    // Add a lipstick mark at click position
+    const newKiss = {
+      id: Date.now(),
+      x: e.clientX,
+      y: e.clientY,
+      rotation: Math.random() * 40 - 20
+    }
+    setKisses(prev => [...prev, newKiss])
+  }
 
-  const sendKiss = () => {
+  const sendKiss = (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent container click
     setKissCount(prev => prev + 1)
     confetti({
       particleCount: 50,
       spread: 70,
       origin: { y: 0.6 },
       colors: ['#e11d48', '#be123c'],
-
-      shapes: ['heart' as any]
-
+      shapes: ['heart' as any] 
     })
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-rose-50 text-center">
+    <div 
+      className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-rose-50 text-center cursor-crosshair"
+      onClick={handleContainerClick}
+    >
+      
+      {/* Lipstick Marks */}
+      <AnimatePresence>
+        {kisses.map((kiss) => (
+          <motion.div
+            key={kiss.id}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 0.6, scale: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute text-4xl text-rose-600 pointer-events-none z-0"
+            style={{ 
+              left: kiss.x, 
+              top: kiss.y, 
+              rotate: kiss.rotation,
+              translateX: "-50%",
+              translateY: "-50%"
+            }}
+          >
+            💋
+          </motion.div>
+        ))}
+      </AnimatePresence>
 
       <motion.div 
         layout
@@ -31,13 +67,15 @@ export default function KissDay() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8 }}
         className="z-10 bg-white/70 backdrop-blur-md p-12 md:p-16 rounded-[4rem] shadow-xl border-2 border-rose-200"
+        onClick={(e) => e.stopPropagation()} // Prevent adding kisses when clicking card
       >
-        <h1 className="text-5xl md:text-7xl font-dancing text-rose-600 mb-8 drop-shadow-sm">
+        <h1 className="text-5xl md:text-7xl font-dancing text-rose-600 mb-8 drop-shadow-sm select-none">
           A kiss for my Love 😘
         </h1>
-
+        <p className="text-sm text-rose-400 mb-4">(Tap anywhere to leave a kiss mark!)</p>
 
         <div className="relative h-[12rem] mb-12 flex items-center justify-center">
+
             {/* Flying Kiss Logic */}
             <motion.div
               whileTap={{ scale: 0.9 }}

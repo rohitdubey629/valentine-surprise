@@ -2,12 +2,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti"
-import { Card, CardContent } from "@/components/ui/card"
 
 export default function ChocolateDay() {
-  const [chocolateCount, setChocolateCount] = useState(0)
+  const [isUnwrapped, setIsUnwrapped] = useState(false)
 
   // Chocolate rain effect
   useEffect(() => {
@@ -36,42 +35,55 @@ export default function ChocolateDay() {
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8 }}
-        className="text-center z-10 space-y-8"
+        className="text-center z-10 space-y-12"
       >
         <h1 className="text-5xl md:text-7xl font-dancing text-amber-800 drop-shadow-md">
           Sweet Chocolate Day 🍫
         </h1>
         
-        <div className="relative w-64 h-64 mx-auto perspective-1000">
-           {/* Simple 3D Card Effect */}
-          <motion.div
-            initial={{ rotateY: 0 }}
-             animate={{ rotateY: 360 }}
-             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-             style={{ transformStyle: "preserve-3d" }}
-             className="w-full h-full bg-gradient-to-br from-amber-700 to-orange-900 rounded-3xl shadow-2xl flex items-center justify-center text-white text-4xl font-bold border-4 border-amber-300"
-          >
-            <div className="flex flex-col items-center gap-4">
-               <span className="text-6xl drop-shadow-lg">🍫</span>
-               <span className="font-dancing text-3xl">For You</span>
-            </div>
-          </motion.div>
+        <div className="relative w-72 h-96 mx-auto cursor-pointer perspective-1000" onClick={() => setIsUnwrapped(true)}>
+           {/* Chocolate Bar Wrapper */}
+           <AnimatePresence>
+             {!isUnwrapped && (
+               <motion.div
+                 initial={{ y: 0 }}
+                 exit={{ y: -1000, opacity: 0, rotate: -20 }}
+                 transition={{ duration: 1 }}
+                 className="absolute inset-0 z-20 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl shadow-2xl flex items-center justify-center border-4 border-amber-400"
+               >
+                 <div className="text-center">
+                    <p className="font-bold text-amber-300 text-4xl font-serif">DAIRY MILK</p>
+                    <p className="text-white mt-4 font-dancing text-2xl">Tap to Unwrap</p>
+                 </div>
+               </motion.div>
+             )}
+           </AnimatePresence>
+
+           {/* Inner Golden Ticket */}
+           <motion.div
+             className="absolute inset-0 z-10 bg-gradient-to-br from-yellow-300 via-amber-200 to-yellow-400 rounded-xl shadow-xl flex flex-col items-center justify-center border-8 border-double border-amber-600 p-6"
+           >
+             <div className="border-4 border-dashed border-amber-800/30 w-full h-full flex flex-col items-center justify-center p-4">
+                <p className="text-5xl mb-4">🎫</p>
+                <h3 className="text-2xl font-bold text-amber-900 uppercase tracking-widest mb-2">Golden Ticket</h3>
+                <p className="font-dancing text-amber-800 text-xl">
+                  Valid for unlimited cuddles and chocolates for my love!
+                </p>
+                <p className="mt-6 text-xs text-amber-900/50 uppercase">No Expiration Date</p>
+             </div>
+           </motion.div>
         </div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5 }}
+          animate={{ opacity: isUnwrapped ? 1 : 0 }}
           className="bg-white/80 p-8 rounded-2xl shadow-xl backdrop-blur-sm max-w-lg mx-auto"
         >
           <p className="text-2xl text-amber-900 font-serif italic mb-4">
-            "Because you are sweeter than any chocolate in the world ❤️"
-          </p>
-          <p className="text-amber-700 font-medium">
-            Take a sweet bite!
+            "You found the key to my heart... and it's sweeter than chocolate! ❤️"
           </p>
         </motion.div>
       </motion.div>
     </div>
   )
 }
+

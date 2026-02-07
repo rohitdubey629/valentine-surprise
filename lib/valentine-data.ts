@@ -1,13 +1,14 @@
 
-import { 
-  Heart, 
-  Sun, 
-  Sparkle, 
-  Gift, 
-  CheckCircle, 
-  Zap, 
-  Smile, 
-  Flame 
+import {
+  Heart,
+  Sun,
+  Sparkle,
+  Gift,
+  CheckCircle,
+  Zap,
+  Smile,
+  Flame,
+  BookHeart
 } from "lucide-react"
 
 export const VALENTINE_WEEK_DATA = [
@@ -80,7 +81,22 @@ export const VALENTINE_WEEK_DATA = [
     date: "2026-02-14",
     description: "My forever Valentine.",
     icon: Heart,
+
     color: "bg-red-600",
     gradient: "from-red-500 to-rose-700"
+  },
+
+
+
+  {
+    path: "/valentine-week/memories",
+    title: "Our Love Diary",
+    date: "Forever & Always",
+    description: "A special place for our shared dreams & memories 📖",
+    icon: BookHeart,
+    color: "bg-pink-500",
+    gradient: "from-pink-400 to-rose-500",
   }
 ]
+
+
