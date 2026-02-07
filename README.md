@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Valentine Surprise Website ❤️
 
-First, run the development server:
+A beautiful, interactive, and romantic website to surprise your Valentine. Built with love using Next.js 14, Tailwind CSS, shadcn/ui, and Framer Motion.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features ✨
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Romantic Landing Page**: Animated hearts and smooth entrance.
+- **Interactive Proposal**: "Will you be my Valentine?" with a cheeky "No" button that runs away.
+- **Celebration Page**: Confetti blast and joyous animation.
+- **Surprise Letter**: A heartfelt message with typewriter effect.
+- **Responsive Design**: Works perfectly on mobile and desktop.
+- **Background Music**: Persistent audio player.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Customization 🎨
 
-## Learn More
+### 1. Background Music 🎵
+Place your romantic MP3 file in the `public` folder and rename it to `bgm.mp3`.
+Currently, the code looks for `/bgm.mp3`.
 
-To learn more about Next.js, take a look at the following resources:
+### 2. Success Sound 🎉
+Place a short sound effect (e.g., chime or cheering) in `public` and name it `success.mp3`.
+This plays when "YES" is clicked.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. Images 🖼️
+If you want to add custom photos, place them in `public/` and update the `src` in the respective components.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Getting Started 🚀
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2.  **Run the development server**:
+    ```bash
+    npm run dev
+    ```
+
+3.  **Open the link**:
+    http://localhost:3000
+
+## Deploy 🌐
+
+Deploy easily on [Vercel](https://vercel.com):
+
+1.  Push to GitHub.
+2.  Import project in Vercel.
+3.  Deploy!
+
+Happy Valentine's Day! 💖
