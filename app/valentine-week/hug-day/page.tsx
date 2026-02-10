@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useEffect, useState, useRef } from "react"
@@ -6,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti"
 import { useMusic } from "@/components/music-provider"
 import { Button } from "@/components/ui/button"
+import { SurpriseReveal } from "@/components/SurpriseReveal"
+import { CONSTANTS } from "@/lib/constants"
 
 export default function HugDay() {
   const { play } = useMusic()
@@ -59,6 +60,7 @@ export default function HugDay() {
   }
 
   return (
+    <SurpriseReveal color="yellow">
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-yellow-50 text-center select-none">
 
       {/* Heartbeat Background */}
@@ -75,7 +77,7 @@ export default function HugDay() {
         className="z-10 bg-white/60 backdrop-blur-xl p-12 rounded-[3rem] shadow-2xl border-4 border-yellow-200 max-w-4xl w-full flex flex-col items-center justify-center gap-12"
       >
         <h1 className="text-4xl md:text-7xl font-dancing text-yellow-600 drop-shadow-sm">
-          A Big Warm Hug 🤗
+          {CONSTANTS.hugDay.title}
         </h1>
 
         <div className="relative h-[20rem] flex items-center justify-center">
@@ -120,7 +122,7 @@ export default function HugDay() {
         <div className="h-12 w-full max-w-md">
            {hugStatus === "charging" && (
              <p className="text-2xl font-bold text-yellow-600 animate-pulse">
-               Charging Hug... {hugDuration.toFixed(1)}s
+               {CONSTANTS.hugDay.charging} {hugDuration.toFixed(1)}s
              </p>
            )}
            {hugStatus === "sent" && (
@@ -129,12 +131,12 @@ export default function HugDay() {
                animate={{ scale: 1.5, opacity: 1 }}
                className="text-3xl font-dancing font-bold text-orange-600"
              >
-               {hugDuration > 3 ? "MEGA BEAR HUG SENT! 🐻💥" : "Warm Hug Sent! 🤗"}
+               {hugDuration > 3 ? CONSTANTS.hugDay.sentMega : CONSTANTS.hugDay.sent}
              </motion.p>
            )}
            {hugStatus === "idle" && (
              <p className="text-xl text-yellow-800 font-serif italic">
-               Hold the emoji to send a bigger hug!
+               {CONSTANTS.hugDay.idle}
              </p>
            )}
         </div>
@@ -148,11 +150,11 @@ export default function HugDay() {
           onTouchStart={startHug}
           onTouchEnd={releaseHug}
         >
-          Hold to Hug 🤗
+          {CONSTANTS.hugDay.button}
         </Button>
 
       </motion.div>
     </div>
+    </SurpriseReveal>
   )
 }
-

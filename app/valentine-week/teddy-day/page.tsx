@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from "react"
@@ -6,15 +5,8 @@ import { motion, AnimatePresence } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
 import confetti from "canvas-confetti"
-
-
-const TEDDY_MESSAGES = [
-  "I'm soft like your heart! 🧸",
-  "Hug me tighter! 🤗",
-  "You are my favorite human! ❤️",
-  "Sending warm fuzzies... ✨",
-  "Best cuddles ever! 💖"
-]
+import { SurpriseReveal } from "@/components/SurpriseReveal"
+import { CONSTANTS } from "@/lib/constants"
 
 export default function TeddyDay() {
   const [isHugging, setIsHugging] = useState(false)
@@ -23,7 +15,7 @@ export default function TeddyDay() {
 
   const handleHug = () => {
     setIsHugging(true)
-    const randomMsg = TEDDY_MESSAGES[Math.floor(Math.random() * TEDDY_MESSAGES.length)]
+    const randomMsg = CONSTANTS.teddyDay.messages[Math.floor(Math.random() * CONSTANTS.teddyDay.messages.length)]
     setMessage(randomMsg)
     
     // Increase meter
@@ -32,11 +24,20 @@ export default function TeddyDay() {
       setLoveMeter(newMeter)
       
       if (newMeter === 100) {
+       // Big confetti explosion
         confetti({
           particleCount: 150,
           spread: 70,
           origin: { y: 0.6 },
           colors: ['#f97316', '#fbbf24', '#ffedd5']
+        })
+      } else {
+        // Small confetti
+        confetti({
+            particleCount: 30,
+            spread: 50,
+            origin: { y: 0.6 },
+            colors: ['#f97316', '#fbbf24']
         })
       }
     }
@@ -45,19 +46,44 @@ export default function TeddyDay() {
   }
 
   return (
+    <SurpriseReveal color="orange">
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-orange-50 text-center">
+
+        {/* Falling Bears Background (faint) */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+            {[...Array(10)].map((_, i) => (
+                <motion.div
+                    key={i}
+                    initial={{ y: -100, x: Math.random() * 100 + "%" }}
+                    animate={{ y: "110vh", rotate: 360 }}
+                    transition={{ 
+                        duration: Math.random() * 15 + 10, 
+                        repeat: Infinity, 
+                        ease: "linear",
+                        delay: Math.random() * 20
+                    }}
+                    className="absolute text-4xl"
+                >
+                    🧸
+                </motion.div>
+            ))}
+        </div>
+
 
       <motion.div 
         layout 
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.5 }}
         className="z-10 bg-white/80 p-8 md:p-16 rounded-[3rem] shadow-2xl backdrop-blur-md border-4 border-orange-200 flex flex-col items-center gap-8 max-w-xl w-full"
       >
         <h1 className="text-4xl md:text-6xl font-dancing text-orange-600 mb-2 drop-shadow-sm">
-          Happy Teddy Day 🧸
+          {CONSTANTS.teddyDay.title}
         </h1>
 
         <div className="w-full space-y-2">
             <div className="flex justify-between text-sm text-orange-700 font-bold uppercase tracking-wider">
-               <span>Love Meter</span>
+               <span>{CONSTANTS.teddyDay.loveMeter}</span>
                <span>{loveMeter}%</span>
             </div>
             <div className="h-4 bg-orange-100 rounded-full overflow-hidden border border-orange-200">
@@ -94,6 +120,8 @@ export default function TeddyDay() {
                 y: [0, -5, 0] 
               }}
               transition={{ duration: 0.5 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className="text-[10rem] cursor-pointer origin-bottom filter drop-shadow-lg"
               onClick={handleHug}
             >
@@ -112,7 +140,7 @@ export default function TeddyDay() {
         </div>
 
         <p className="text-xl text-orange-700 font-medium italic">
-          {loveMeter === 100 ? "Use fully STUFFED with Love! 🎉" : "Tap Teddy to send warm hugs!"}
+          {loveMeter === 100 ? CONSTANTS.teddyDay.fullMessage : CONSTANTS.teddyDay.tapMessage}
         </p>
   
         <Button 
@@ -121,10 +149,10 @@ export default function TeddyDay() {
           onClick={handleHug}
           disabled={loveMeter === 100}
         >
-          {loveMeter === 100 ? "Maximum Cuteness! 🥰" : "Squeeze Teddy 🤗"}
+          {loveMeter === 100 ? CONSTANTS.teddyDay.maxCuteness : CONSTANTS.teddyDay.squeezeButton}
         </Button>
       </motion.div>
     </div>
+    </SurpriseReveal>
   )
 }
-
