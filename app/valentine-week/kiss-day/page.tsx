@@ -1,14 +1,17 @@
-
 "use client"
 
-import { useState, useRef } from "react"
+import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti"
 import { Button } from "@/components/ui/button"
+import { SurpriseReveal } from "@/components/SurpriseReveal"
+import { SpecialSurpriseModal } from "@/components/SpecialSurpriseModal"
+import { CONSTANTS } from "@/lib/constants"
 
 export default function KissDay() {
   const [kissCount, setKissCount] = useState(0)
   const [kisses, setKisses] = useState<{id: number, x: number, y: number, rotation: number}[]>([])
+  const [isSurpriseOpen, setIsSurpriseOpen] = useState(false)
   
   const handleContainerClick = (e: React.MouseEvent) => {
     // Add a lipstick mark at click position
@@ -34,6 +37,7 @@ export default function KissDay() {
   }
 
   return (
+    <SurpriseReveal color="rose">
     <div 
       className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-rose-50 text-center cursor-crosshair"
       onClick={handleContainerClick}
@@ -70,9 +74,9 @@ export default function KissDay() {
         onClick={(e) => e.stopPropagation()} // Prevent adding kisses when clicking card
       >
         <h1 className="text-5xl md:text-7xl font-dancing text-rose-600 mb-8 drop-shadow-sm select-none">
-          A kiss for my Love 😘
+          {CONSTANTS.kissDay.title}
         </h1>
-        <p className="text-sm text-rose-400 mb-4">(Tap anywhere to leave a kiss mark!)</p>
+        <p className="text-sm text-rose-400 mb-4">{CONSTANTS.kissDay.subtitle}</p>
 
         <div className="relative h-[12rem] mb-12 flex items-center justify-center">
 
@@ -113,17 +117,27 @@ export default function KissDay() {
 
 
         <p className="text-2xl text-rose-800 font-medium italic mb-8">
-          "Sealed with a kiss, forever yours."
+          "{CONSTANTS.kissDay.quote}"
         </p>
 
-        <Button 
-          size="lg" 
-          variant="romantic"
-          className="text-xl px-12 py-6 rounded-full shadow-rose-500/30 hover:shadow-rose-500/50 hover:scale-105 transition-all active:scale-95"
-          onClick={sendKiss}
-        >
-          Send Another Kiss 😘
-        </Button>
+        <div className="flex flex-col gap-4">
+            <Button 
+                size="lg" 
+                variant="default" // Changed from 'romantic' to 'default' or standard variant if 'romantic' is custom and might break
+                className="bg-rose-500 hover:bg-rose-600 text-white text-xl px-12 py-6 rounded-full shadow-rose-500/30 hover:shadow-rose-500/50 hover:scale-105 transition-all active:scale-95"
+                onClick={sendKiss}
+            >
+                {CONSTANTS.kissDay.button}
+            </Button>
+            
+            <Button
+                onClick={() => setIsSurpriseOpen(true)}
+                className="bg-gradient-to-r from-pink-500 to-rose-500 text-white animate-pulse hover:scale-105 transition-transform shadow-lg rounded-full px-8 py-4 text-lg"
+            >
+                {CONSTANTS.kissDay.surpriseButton}
+            </Button>
+        </div>
+
 
         {kissCount > 0 && (
           <motion.div 
@@ -136,6 +150,16 @@ export default function KissDay() {
         )}
 
       </motion.div>
+      
+      <SpecialSurpriseModal 
+        isOpen={isSurpriseOpen}
+        onClose={() => setIsSurpriseOpen(false)}
+        imageSrc="/images/kiss_day_cartoon.png"
+        title={CONSTANTS.kissDay.modalTitle}
+        message={CONSTANTS.kissDay.modalMessage}
+      />
+
     </div>
+    </SurpriseReveal>
   )
 }

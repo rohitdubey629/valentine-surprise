@@ -1,9 +1,10 @@
-
 "use client"
 
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti"
+import { SurpriseReveal } from "@/components/SurpriseReveal"
+import { CONSTANTS } from "@/lib/constants"
 
 export default function ChocolateDay() {
   const [isUnwrapped, setIsUnwrapped] = useState(false)
@@ -29,6 +30,7 @@ export default function ChocolateDay() {
   }, [])
 
   return (
+    <SurpriseReveal color="amber">
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-amber-50">
       
       <motion.div
@@ -38,7 +40,7 @@ export default function ChocolateDay() {
         className="text-center z-10 space-y-12"
       >
         <h1 className="text-5xl md:text-7xl font-dancing text-amber-800 drop-shadow-md">
-          Sweet Chocolate Day 🍫
+          {CONSTANTS.chocolateDay.title}
         </h1>
         
         <div className="relative w-72 h-96 mx-auto cursor-pointer perspective-1000" onClick={() => setIsUnwrapped(true)}>
@@ -48,12 +50,12 @@ export default function ChocolateDay() {
                <motion.div
                  initial={{ y: 0 }}
                  exit={{ y: -1000, opacity: 0, rotate: -20 }}
-                 transition={{ duration: 1 }}
+                 transition={{ duration: 1, ease: "anticipate" }}
                  className="absolute inset-0 z-20 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl shadow-2xl flex items-center justify-center border-4 border-amber-400"
                >
                  <div className="text-center">
-                    <p className="font-bold text-amber-300 text-4xl font-serif">DAIRY MILK</p>
-                    <p className="text-white mt-4 font-dancing text-2xl">Tap to Unwrap</p>
+                    <p className="font-bold text-amber-300 text-4xl font-serif">{CONSTANTS.chocolateDay.wrapperText}</p>
+                    <p className="text-white mt-4 font-dancing text-2xl animate-pulse">{CONSTANTS.chocolateDay.tapText}</p>
                  </div>
                </motion.div>
              )}
@@ -65,25 +67,27 @@ export default function ChocolateDay() {
            >
              <div className="border-4 border-dashed border-amber-800/30 w-full h-full flex flex-col items-center justify-center p-4">
                 <p className="text-5xl mb-4">🎫</p>
-                <h3 className="text-2xl font-bold text-amber-900 uppercase tracking-widest mb-2">Golden Ticket</h3>
+                <h3 className="text-2xl font-bold text-amber-900 uppercase tracking-widest mb-2">{CONSTANTS.chocolateDay.ticketTitle}</h3>
                 <p className="font-dancing text-amber-800 text-xl">
-                  Valid for unlimited cuddles and chocolates for my love!
+                  {CONSTANTS.chocolateDay.ticketMessage}
                 </p>
-                <p className="mt-6 text-xs text-amber-900/50 uppercase">No Expiration Date</p>
+                <p className="mt-6 text-xs text-amber-900/50 uppercase">{CONSTANTS.chocolateDay.ticketFooter}</p>
              </div>
            </motion.div>
         </div>
 
         <motion.div
-          animate={{ opacity: isUnwrapped ? 1 : 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: isUnwrapped ? 1 : 0, y: isUnwrapped ? 0 : 20 }}
+          transition={{ delay: 0.5 }}
           className="bg-white/80 p-8 rounded-2xl shadow-xl backdrop-blur-sm max-w-lg mx-auto"
         >
           <p className="text-2xl text-amber-900 font-serif italic mb-4">
-            "You found the key to my heart... and it's sweeter than chocolate! ❤️"
+            "{CONSTANTS.chocolateDay.quote}"
           </p>
         </motion.div>
       </motion.div>
     </div>
+    </SurpriseReveal>
   )
 }
-

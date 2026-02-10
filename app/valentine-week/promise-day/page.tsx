@@ -1,4 +1,3 @@
-
 "use client"
 
 
@@ -6,14 +5,8 @@ import { useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti"
 import { Check, HandHeart } from "lucide-react"
-import { Button } from "@/components/ui/button"
-
-const PROMISES = [
-  "Always love you ❤️",
-  "Protect you 🤝",
-  "Support you 💪",
-  "Make you smile 😘"
-]
+import { SurpriseReveal } from "@/components/SurpriseReveal"
+import { CONSTANTS } from "@/lib/constants"
 
 export default function PromiseDay() {
   const [checkedPromises, setCheckedPromises] = useState<number[]>([])
@@ -37,7 +30,7 @@ export default function PromiseDay() {
     }
   }
 
-  const allChecked = checkedPromises.length === PROMISES.length
+  const allChecked = checkedPromises.length === CONSTANTS.promiseDay.promises.length
 
   const handleTouchStart = () => {
     if (isScannerComplete) return
@@ -71,6 +64,7 @@ export default function PromiseDay() {
 
 
   return (
+    <SurpriseReveal color="blue">
     <div className="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden bg-blue-50">
       
       <motion.div 
@@ -82,14 +76,14 @@ export default function PromiseDay() {
         <div className="text-center">
           <HandHeart className="w-16 h-16 mx-auto text-blue-500 mb-4 animate-pulse" />
           <h1 className="text-4xl md:text-6xl font-dancing text-blue-600 drop-shadow-sm">
-            My Promise to You 🤝
+            {CONSTANTS.promiseDay.title}
           </h1>
-          <p className="text-blue-800/80 mt-2 italic">Check each promise to seal it!</p>
+          <p className="text-blue-800/80 mt-2 italic">{CONSTANTS.promiseDay.subtitle}</p>
         </div>
 
 
         <div className="space-y-4 relative z-20">
-          {PROMISES.map((promise, index) => {
+          {CONSTANTS.promiseDay.promises.map((promise, index) => {
             const isChecked = checkedPromises.includes(index)
             return (
               <motion.div
@@ -126,7 +120,7 @@ export default function PromiseDay() {
                   onTouchStart={handleTouchStart}
                   onTouchEnd={handleTouchEnd}
                 >
-                  <div className={`w-24 h-24 rounded-full border-4 ${isScanning ? "border-blue-500 animate-pulse" : "border-gray-300"} flex items-center justify-center bg-blue-50 relative overflow-hidden`}>
+                  <div className={`w-24 h-24 rounded-full border-4 ${isScanning ? "border-blue-500 animate-pulse" : "border-gray-300"} flex items-center justify-center bg-blue-50 relative overflow-hidden transition-all duration-300 transform group-hover:scale-110`}>
                      {/* Scanning Line */}
                      {isScanning && (
                        <motion.div 
@@ -166,7 +160,7 @@ export default function PromiseDay() {
                   )}
                   
                   <p className="mt-4 text-blue-600 font-semibold animate-bounce">
-                    {isScanning ? "Scanning... Hold Still" : "Hold Finger to Seal Promise"}
+                    {isScanning ? CONSTANTS.promiseDay.scanning : CONSTANTS.promiseDay.holdToSeal}
                   </p>
                 </div>
               ) : (
@@ -176,10 +170,10 @@ export default function PromiseDay() {
                   className="text-center space-y-2"
                 >
                    <div className="text-6xl mb-2">🔒</div>
-                   <h3 className="text-2xl font-dancing font-bold text-blue-600">Promise Sealed!</h3>
+                   <h3 className="text-2xl font-dancing font-bold text-blue-600">{CONSTANTS.promiseDay.sealedTitle}</h3>
                    <div className="bg-blue-100 p-4 rounded-lg border border-blue-200 mt-2">
-                     <p className="font-serif italic text-blue-900">"Forever and Always"</p>
-                     <p className="text-right text-xs mt-2 text-blue-400">Digitally Verified</p>
+                     <p className="font-serif italic text-blue-900">"{CONSTANTS.promiseDay.sealedQuote}"</p>
+                     <p className="text-right text-xs mt-2 text-blue-400">{CONSTANTS.promiseDay.verified}</p>
                    </div>
                 </motion.div>
               )}
@@ -190,5 +184,6 @@ export default function PromiseDay() {
 
       </motion.div>
     </div>
+    </SurpriseReveal>
   )
 }

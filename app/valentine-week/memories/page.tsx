@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from "react"
@@ -8,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import confetti from "canvas-confetti"
+import { SurpriseReveal } from "@/components/SurpriseReveal"
+import { CONSTANTS } from "@/lib/constants"
 
 type Memory = {
   id: number
@@ -21,6 +22,12 @@ export default function MemoriesPage() {
   const [inputText, setInputText] = useState("")
   const [activeTab, setActiveTab] = useState<'wish' | 'memory'>('wish')
 
+  const [today, setToday] = useState<Date | null>(null)
+
+  useEffect(() => {
+    setToday(new Date())
+  }, [])
+
   // Load from local storage on mount
   useEffect(() => {
     const saved = localStorage.getItem('shreya_rohit_memories')
@@ -29,8 +36,8 @@ export default function MemoriesPage() {
     } else {
       // Default initial memories
       setMemories([
-        { id: 1, text: "Grow old together 👵👴", date: new Date().toLocaleDateString(), type: 'wish' },
-        { id: 2, text: "Our wedding day 💍", date: "Special Day", type: 'memory' }
+        { id: 1, text: CONSTANTS.memories.defaultWish, date: new Date().toLocaleDateString(), type: 'wish' },
+        { id: 2, text: CONSTANTS.memories.defaultMemory, date: "Special Day", type: 'memory' }
       ])
     }
   }, [])
@@ -66,12 +73,24 @@ export default function MemoriesPage() {
   }
 
   return (
+    <SurpriseReveal color="pink">
     <div className="min-h-screen flex flex-col items-center p-4 md:p-8 bg-pink-50 relative overflow-hidden">
       
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-10 text-4xl opacity-20 animate-bounce">💌</div>
-        <div className="absolute bottom-20 right-10 text-6xl opacity-20 animate-pulse">📅</div>
+        <div className="absolute bottom-20 right-10 opacity-20 animate-pulse transform rotate-12 w-16 h-16 bg-white border border-pink-300 rounded-lg shadow-sm flex flex-col items-center overflow-hidden">
+          <div className="w-full h-5 bg-pink-500 flex items-center justify-center">
+            <span className="text-[10px] text-white font-bold uppercase">
+              {today ? today.toLocaleString('default', { month: 'short' }) : '...'}
+            </span>
+          </div>
+          <div className="flex-1 flex items-center justify-center">
+             <span className="text-2xl font-bold text-pink-600">
+               {today ? today.getDate() : '...'}
+             </span>
+          </div>
+        </div>
       </div>
 
       <motion.div 
@@ -80,10 +99,10 @@ export default function MemoriesPage() {
         className="z-10 text-center mb-8"
       >
         <h1 className="text-4xl md:text-6xl font-dancing text-pink-600 drop-shadow-sm mb-2">
-          Our Love Diary 📖
+          {CONSTANTS.memories.title}
         </h1>
         <p className="text-pink-800 italic">
-          Shreya & Rohit's special moments and future dreams ✨
+          {CONSTANTS.memories.subtitle}
         </p>
       </motion.div>
 
@@ -96,30 +115,30 @@ export default function MemoriesPage() {
               <Button 
                 variant={activeTab === 'wish' ? 'default' : 'outline'}
                 onClick={() => setActiveTab('wish')}
-                className={activeTab === 'wish' ? "bg-pink-500 hover:bg-pink-600" : "text-pink-500 border-pink-200"}
+                className={activeTab === 'wish' ? "bg-pink-500 hover:bg-pink-600 outline-none border-none text-white" : "text-pink-500 border-pink-200 hover:text-pink-600 hover:bg-pink-50"}
               >
-                <Star className="w-4 h-4 mr-2" /> Make a Wish
+                <Star className="w-4 h-4 mr-2" /> {CONSTANTS.memories.wishTab}
               </Button>
               <Button 
                 variant={activeTab === 'memory' ? 'default' : 'outline'}
                 onClick={() => setActiveTab('memory')}
-                className={activeTab === 'memory' ? "bg-purple-500 hover:bg-purple-600" : "text-purple-500 border-purple-200"}
+                className={activeTab === 'memory' ? "bg-purple-500 hover:bg-purple-600 outline-none border-none text-white" : "text-purple-500 border-purple-200 hover:text-purple-600 hover:bg-purple-50"}
               >
-                <Heart className="w-4 h-4 mr-2" /> Add Memory
+                <Heart className="w-4 h-4 mr-2" /> {CONSTANTS.memories.memoryTab}
               </Button>
             </div>
 
             <div className="flex gap-2">
 
               <Input
-                placeholder={activeTab === 'wish' ? "E.g., Trip to Switzerland... ✈️" : "E.g., The day we met... 💑"}
+                placeholder={activeTab === 'wish' ? CONSTANTS.memories.wishPlaceholder : CONSTANTS.memories.memoryPlaceholder}
                 value={inputText}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputText(e.target.value)}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleAdd()}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
                 className="text-lg bg-white border-pink-100 focus:border-pink-300 transition-all font-serif"
               />
 
-              <Button onClick={handleAdd} className={`${activeTab === 'wish' ? 'bg-pink-500' : 'bg-purple-500'} text-white`}>
+              <Button onClick={handleAdd} className={`${activeTab === 'wish' ? 'bg-pink-500 hover:bg-pink-600' : 'bg-purple-500 hover:bg-purple-600'} text-white`}>
                 <Plus className="w-6 h-6" />
               </Button>
             </div>
@@ -128,7 +147,7 @@ export default function MemoriesPage() {
 
         {/* List Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <AnimatePresence>
+          <AnimatePresence mode="popLayout">
             {memories.map((item) => (
               <motion.div
                 key={item.id}
@@ -159,11 +178,12 @@ export default function MemoriesPage() {
 
         {memories.length === 0 && (
           <div className="text-center text-gray-400 mt-12 font-serif italic">
-            Your diary is empty. Start writing your beautiful story... ✨
+            {CONSTANTS.memories.empty}
           </div>
         )}
 
       </div>
     </div>
+    </SurpriseReveal>
   )
 }
