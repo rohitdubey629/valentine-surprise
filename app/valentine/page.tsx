@@ -26,7 +26,7 @@ export default function ValentinePage() {
           <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-rose-400 via-pink-500 to-rose-400" />
           
           <CardContent className="space-y-6">
-            {CONSTANTS.valentine.letter.map((line, index) => (
+            {CONSTANTS.valentineDay.letter.map((line, index) => (
               <motion.p
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -41,13 +41,13 @@ export default function ValentinePage() {
             <motion.div
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: CONSTANTS.valentine.letter.length * 1.5 + 1, type: "spring" }}
+              transition={{ delay: CONSTANTS.valentineDay.letter.length * 1.5 + 1, type: "spring" }}
               className="pt-8"
             >
               <div className="text-8xl animate-bounce">
                 😘
               </div>
-              <p className="text-sm text-pink-400 mt-4 italic">{CONSTANTS.valentine.closing}</p>
+              <p className="text-sm text-pink-400 mt-4 italic">Forever Yours</p>
             </motion.div>
           </CardContent>
         </Card>

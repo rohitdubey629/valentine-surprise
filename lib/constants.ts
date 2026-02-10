@@ -73,7 +73,10 @@ export const CONSTANTS = {
     holdToSeal: "Hold Finger to Seal Promise",
     sealedTitle: "Promise Sealed!",
     sealedQuote: "Forever and Always",
-    verified: "Digitally Verified"
+    verified: "Digitally Verified",
+    surpriseButton: "✨ Promise Surprise ✨",
+    modalTitle: "A Promise for Eternity! 🤞",
+    modalMessage: "I promise to be your biggest supporter, your loudest cheerleader, and your safe place forever. ❤️"
   },
   hugDay: {
     title: "A Big Warm Hug 🤗",
@@ -137,5 +140,14 @@ export const CONSTANTS = {
     empty: "Your diary is empty. Start writing your beautiful story... ✨",
     defaultWish: "Grow old together 👵👴",
     defaultMemory: "Our wedding day 💍"
+  },
+  proposal: {
+    question: "Will you be my Valentine forever? 💍❤️",
+    yesButton: "YES 💖",
+    noButton: "NO 😅"
+  },
+  celebration: {
+    title: "I Knew You'd Say YES! 😘❤️",
+    button: "Open Your Surprise 🎁"
   }
 }

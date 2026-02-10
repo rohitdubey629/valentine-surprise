@@ -8,10 +8,14 @@ import { Check, HandHeart } from "lucide-react"
 import { SurpriseReveal } from "@/components/SurpriseReveal"
 import { CONSTANTS } from "@/lib/constants"
 
+import { SpecialSurpriseModal } from "@/components/SpecialSurpriseModal"
+import { Button } from "@/components/ui/button"
+
 export default function PromiseDay() {
   const [checkedPromises, setCheckedPromises] = useState<number[]>([])
   const [isScanning, setIsScanning] = useState(false)
   const [isScannerComplete, setIsScannerComplete] = useState(false)
+  const [isSurpriseOpen, setIsSurpriseOpen] = useState(false)
   const scanTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const togglePromise = (index: number) => {
@@ -167,7 +171,7 @@ export default function PromiseDay() {
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="text-center space-y-2"
+                  className="text-center space-y-4"
                 >
                    <div className="text-6xl mb-2">🔒</div>
                    <h3 className="text-2xl font-dancing font-bold text-blue-600">{CONSTANTS.promiseDay.sealedTitle}</h3>
@@ -175,6 +179,13 @@ export default function PromiseDay() {
                      <p className="font-serif italic text-blue-900">"{CONSTANTS.promiseDay.sealedQuote}"</p>
                      <p className="text-right text-xs mt-2 text-blue-400">{CONSTANTS.promiseDay.verified}</p>
                    </div>
+                   
+                   <Button
+                      onClick={() => setIsSurpriseOpen(true)}
+                      className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white animate-pulse hover:scale-105 transition-transform shadow-lg rounded-full px-8 py-4 text-lg w-full"
+                  >
+                      {CONSTANTS.promiseDay.surpriseButton}
+                  </Button>
                 </motion.div>
               )}
             </motion.div>
@@ -183,6 +194,14 @@ export default function PromiseDay() {
 
 
       </motion.div>
+
+      <SpecialSurpriseModal 
+        isOpen={isSurpriseOpen}
+        onClose={() => setIsSurpriseOpen(false)}
+        imageSrc="/images/propose_day_cartoon.png" // Re-using a relevant cartoon
+        title={CONSTANTS.promiseDay.modalTitle}
+        message={CONSTANTS.promiseDay.modalMessage}
+      />
     </div>
     </SurpriseReveal>
   )
