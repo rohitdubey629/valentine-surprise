@@ -5,11 +5,12 @@ import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import confetti from "canvas-confetti"
-import { Heart, RotateCcw, Sparkles } from "lucide-react"
+import { Heart, RotateCcw, Sparkles, Share2 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useNames } from "@/lib/names-context"
 import { randomLoveScore, loveVerdict } from "@/lib/love-meter"
+import { shareOrDownloadLoveCard } from "@/lib/share-card"
 
 type Phase = "idle" | "calculating" | "done"
 
@@ -19,6 +20,7 @@ export default function LoveMeterPage() {
   const [phase, setPhase] = useState<Phase>("idle")
   const [displayScore, setDisplayScore] = useState(0)
   const [finalScore, setFinalScore] = useState(0)
+  const [sharing, setSharing] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const verdict = loveVerdict(finalScore)
@@ -71,6 +73,22 @@ export default function LoveMeterPage() {
   const reset = () => {
     setPhase("idle")
     setDisplayScore(0)
+  }
+
+  const handleShare = async () => {
+    setSharing(true)
+    try {
+      await shareOrDownloadLoveCard({
+        me: names.me || "Tum",
+        partner: names.partner || "Partner",
+        score: finalScore,
+        title: verdict.title,
+      })
+    } catch {
+      // ignore share/download failures (e.g. user cancelled)
+    } finally {
+      setSharing(false)
+    }
   }
 
   return (
@@ -159,13 +177,24 @@ export default function LoveMeterPage() {
                   </h2>
                   <p className="text-white/90 font-serif italic">{verdict.message}</p>
 
-                  <Button
-                    onClick={reset}
-                    variant="outline"
-                    className="mt-2 rounded-full bg-white/10 border-2 border-white text-white hover:bg-white/25 hover:text-white"
-                  >
-                    <RotateCcw className="w-4 h-4 mr-2" /> Dobara Try Karo
-                  </Button>
+                  <div className="flex flex-wrap gap-3 justify-center mt-2">
+                    <Button
+                      onClick={handleShare}
+                      disabled={sharing}
+                      className="rounded-full bg-white/90 text-rose-600 hover:bg-white shadow-lg disabled:opacity-70"
+                    >
+                      <Share2 className="w-4 h-4 mr-2" />
+                      {sharing ? "Tayyar kar rahe hain..." : "Share Karo"}
+                    </Button>
+
+                    <Button
+                      onClick={reset}
+                      variant="outline"
+                      className="rounded-full bg-white/10 border-2 border-white text-white hover:bg-white/25 hover:text-white"
+                    >
+                      <RotateCcw className="w-4 h-4 mr-2" /> Dobara Try Karo
+                    </Button>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
