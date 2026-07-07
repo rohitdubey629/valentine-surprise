@@ -98,6 +98,14 @@ export default function LandingPage() {
             >
               Together Time 💑
             </Button>
+
+            <Button
+              variant="link"
+              className="text-pink-600 font-semibold hover:text-pink-800 underline-offset-4"
+              onClick={() => router.push("/love-meter")}
+            >
+              Love Meter 💘
+            </Button>
           </div>
 
         </motion.div>
