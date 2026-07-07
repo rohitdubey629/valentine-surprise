@@ -6,10 +6,12 @@ import { motion } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { useMusic } from "@/components/music-provider"
 import { CONSTANTS } from "@/lib/constants"
+import { useFormattedText } from "@/lib/names-context"
 
 export default function ValentinePage() {
   const { play } = useMusic()
-  
+  const t = useFormattedText()
+
   useEffect(() => {
     play()
   }, [])
@@ -34,7 +36,7 @@ export default function ValentinePage() {
                 transition={{ delay: index * 1.5 + 0.5, duration: 1 }}
                 className={`text-xl md:text-3xl ${index === 0 ? "font-dancing text-4xl md:text-5xl font-bold text-rose-600 mb-8" : "font-medium text-rose-800"}`}
               >
-                {line}
+                {t(line)}
               </motion.p>
             ))}
 

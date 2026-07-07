@@ -15,6 +15,8 @@ export const metadata: Metadata = {
 
 import { MusicProvider } from "@/components/music-provider";
 import { FloatingHearts } from "@/components/floating-hearts";
+import { NamesProvider } from "@/lib/names-context";
+import { NameGate } from "@/components/NameGate";
 
 export default function RootLayout({
   children,
@@ -24,10 +26,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.variable, dancingScript.variable, "font-sans antialiased min-h-screen bg-gradient-to-br from-pink-100 via-rose-100 to-purple-100 overflow-x-hidden relative")}>
-        <MusicProvider>
-          <FloatingHearts />
-          {children}
-        </MusicProvider>
+        <NamesProvider>
+          <MusicProvider>
+            <FloatingHearts />
+            <NameGate>{children}</NameGate>
+          </MusicProvider>
+        </NamesProvider>
       </body>
     </html>
   );

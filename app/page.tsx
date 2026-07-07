@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useMusic } from "@/components/music-provider"
+import { useFormattedText } from "@/lib/names-context"
 
 
 import { CONSTANTS } from "@/lib/constants"
@@ -14,6 +15,7 @@ import { CONSTANTS } from "@/lib/constants"
 export default function LandingPage() {
   const router = useRouter()
   const { play } = useMusic()
+  const t = useFormattedText()
 
   const handleStart = () => {
     play()
@@ -45,7 +47,7 @@ export default function LandingPage() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          {CONSTANTS.landing.title}
+          {t(CONSTANTS.landing.title)}
         </motion.h1>
 
         <motion.p
@@ -73,12 +75,28 @@ export default function LandingPage() {
               {CONSTANTS.landing.button}
             </Button>
             
-            <Button 
+            <Button
               variant="link"
               className="text-rose-600 font-semibold hover:text-rose-800 underline-offset-4"
               onClick={() => router.push("/valentine-week")}
             >
               See Valentine Week Calendar 📅
+            </Button>
+
+            <Button
+              variant="link"
+              className="text-purple-600 font-semibold hover:text-purple-800 underline-offset-4"
+              onClick={() => router.push("/daily-vibe")}
+            >
+              Aaj Ka Vibe ✨
+            </Button>
+
+            <Button
+              variant="link"
+              className="text-fuchsia-600 font-semibold hover:text-fuchsia-800 underline-offset-4"
+              onClick={() => router.push("/together-time")}
+            >
+              Together Time 💑
             </Button>
           </div>
 

@@ -9,8 +9,10 @@ import { SurpriseReveal } from "@/components/SurpriseReveal"
 import { SpecialSurpriseModal } from "@/components/SpecialSurpriseModal"
 import { LoveStoryModal } from "@/components/LoveStoryModal"
 import { CONSTANTS } from "@/lib/constants"
+import { useFormattedText } from "@/lib/names-context"
 
 export default function ValentineDay() {
+  const t = useFormattedText()
   const { play } = useMusic()
   const [accepted, setAccepted] = useState(false)
   const [activeSurprise, setActiveSurprise] = useState<string | null>(null)
@@ -67,7 +69,7 @@ export default function ValentineDay() {
                     transition={{ delay: index * 0.8 + 0.5, duration: 1 }}
                     className={`text-xl md:text-3xl ${index === 0 || index === CONSTANTS.valentineDay.letter.length - 1 ? "font-dancing text-rose-300 font-bold text-3xl md:text-5xl my-4" : "font-serif italic text-rose-100/90 leading-relaxed"}`}
                 >
-                    {line}
+                    {t(line)}
                 </motion.p>
                 ))}
             </div>
@@ -84,7 +86,7 @@ export default function ValentineDay() {
                 className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white text-2xl md:text-3xl py-8 px-12 rounded-full shadow-[0_0_50px_rgba(225,29,72,0.6)] animate-bounce"
                 onClick={handleAccept}
                 >
-                {CONSTANTS.valentineDay.proposalButton}
+                {t(CONSTANTS.valentineDay.proposalButton)}
                 </Button>
             </motion.div>
             </motion.div>
@@ -95,7 +97,7 @@ export default function ValentineDay() {
                 className="flex flex-col items-center justify-center min-h-[50vh] gap-8"
             >
                 <h1 className="text-5xl md:text-8xl font-dancing text-rose-400 drop-shadow-[0_0_20px_rgba(251,113,133,0.8)]">
-                {CONSTANTS.valentineDay.successTitle}
+                {t(CONSTANTS.valentineDay.successTitle)}
                 </h1>
 
                 <p className="text-2xl text-rose-200/80 font-serif">

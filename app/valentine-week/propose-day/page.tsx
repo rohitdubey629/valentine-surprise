@@ -8,8 +8,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { SurpriseReveal } from "@/components/SurpriseReveal"
 import { SpecialSurpriseModal } from "@/components/SpecialSurpriseModal"
 import { CONSTANTS } from "@/lib/constants"
+import { useFormattedText, useNames } from "@/lib/names-context"
 
 export default function ProposeDay() {
+  const t = useFormattedText()
+  const { names } = useNames()
   const [proposalAccepted, setProposalAccepted] = useState(false)
   const [isBoxOpen, setIsBoxOpen] = useState(false)
   const [isSurpriseOpen, setIsSurpriseOpen] = useState(false)
@@ -118,7 +121,7 @@ export default function ProposeDay() {
           >
 
             <h2 className="text-3xl md:text-5xl font-dancing text-green-600 mt-4 mb-8">
-              {CONSTANTS.proposeDay.successTitle}
+              {t(CONSTANTS.proposeDay.successTitle)}
             </h2>
             
             {/* Proposal Certificate */}
@@ -132,11 +135,11 @@ export default function ProposeDay() {
                  
                  <div className="flex justify-between items-end pt-8 px-4">
                     <div className="text-center">
-                       <div className="font-dancing text-xl border-t border-amber-800 w-32 pt-1">{CONSTANTS.names.me}</div>
+                       <div className="font-dancing text-xl border-t border-amber-800 w-32 pt-1">{names.me}</div>
                     </div>
                     <div className="text-4xl">🤝</div>
                     <div className="text-center">
-                       <div className="font-dancing text-xl border-t border-amber-800 w-32 pt-1">{CONSTANTS.names.partner}</div>
+                       <div className="font-dancing text-xl border-t border-amber-800 w-32 pt-1">{names.partner}</div>
                     </div>
                  </div>
               </CardContent>

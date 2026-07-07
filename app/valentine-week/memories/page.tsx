@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import confetti from "canvas-confetti"
 import { SurpriseReveal } from "@/components/SurpriseReveal"
 import { CONSTANTS } from "@/lib/constants"
+import { useFormattedText } from "@/lib/names-context"
 
 type Memory = {
   id: number
@@ -18,6 +19,7 @@ type Memory = {
 }
 
 export default function MemoriesPage() {
+  const t = useFormattedText()
   const [memories, setMemories] = useState<Memory[]>([])
   const [inputText, setInputText] = useState("")
   const [activeTab, setActiveTab] = useState<'wish' | 'memory'>('wish')
@@ -102,7 +104,7 @@ export default function MemoriesPage() {
           {CONSTANTS.memories.title}
         </h1>
         <p className="text-pink-800 italic">
-          {CONSTANTS.memories.subtitle}
+          {t(CONSTANTS.memories.subtitle)}
         </p>
       </motion.div>
 

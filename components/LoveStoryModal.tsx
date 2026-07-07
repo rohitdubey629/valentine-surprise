@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { X, ArrowRight, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useFormattedText } from "@/lib/names-context"
 
 interface LoveStoryModalProps {
   isOpen: boolean
@@ -28,12 +29,13 @@ const STORY_STEPS = [
   },
   {
     image: "/images/valentine_day_cartoon.png",
-    text: "Now here we are, celebrating our love. You are my world, Shreya! ❤️",
+    text: "Now here we are, celebrating our love. You are my world, {{partner}}! ❤️",
     title: "Forever & Always"
   }
 ]
 
 export function LoveStoryModal({ isOpen, onClose }: LoveStoryModalProps) {
+  const t = useFormattedText()
   const [currentStep, setCurrentStep] = useState(0)
 
   // Reset step when opening
@@ -102,7 +104,7 @@ export function LoveStoryModal({ isOpen, onClose }: LoveStoryModalProps) {
                      </div>
 
                      <p className="text-xl md:text-2xl font-serif italic text-rose-800 mb-8 min-h-[4rem]">
-                       {STORY_STEPS[currentStep].text}
+                       {t(STORY_STEPS[currentStep].text)}
                      </p>
                   </motion.div>
                 </AnimatePresence>

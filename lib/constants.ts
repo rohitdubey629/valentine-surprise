@@ -1,13 +1,7 @@
 
 export const CONSTANTS = {
-  names: {
-    me: "Rohit Dubey",
-    partner: "Shreya Mishra",
-    partner_short: "Shreya",
-    me_short: "Rohit"
-  },
   landing: {
-    title: "Hey Shreya, My Love ❤️",
+    title: "Hey {{partner}}, My Love ❤️",
     subtitle: "I made something special just for you...",
     button: "Open My Heart 💖"
   },
@@ -28,7 +22,7 @@ export const CONSTANTS = {
     tapToOpen: "Tap to Open",
     question: "Will you always stay with me? 💍",
     yesButton: "YES, FOREVER! 💖",
-    successTitle: "Shreya Said YES! 😘❤️",
+    successTitle: "{{partner}} Said YES! 😘❤️",
     certificateTitle: "Certificate of Love",
     certificateSubtitle: "Official Soulmates",
     pulseMessage: "You've made me the happiest person alive!",
@@ -97,7 +91,7 @@ export const CONSTANTS = {
   },
   valentineDay: {
     letter: [
-      "My Dearest Shreya ❤️",
+      "My Dearest {{partner}} ❤️",
       "From the moment you entered my life,",
       "You became my favorite person.",
       "Your smile is my sunshine,",
@@ -106,10 +100,10 @@ export const CONSTANTS = {
       "To love you more each day,",
       "And to be yours, always.",
       "Happy Valentine's Day, My Love! 💖",
-      "Forever Yours, Rohit 💑"
+      "Forever Yours, {{me}} 💑"
     ],
-    proposalButton: "Be My Valentine Forever, Shreya? 💍",
-    successTitle: "I Love You Shreya! ❤️",
+    proposalButton: "Be My Valentine Forever, {{partner}}? 💍",
+    successTitle: "I Love You {{partner}}! ❤️",
     successMessage: "You are the best thing that ever happened to me.",
     cartoonButton: "🎨 Cartoon Surprise",
     storyButton: "🎬 Watch Our Love Story 🎥",
@@ -132,7 +126,7 @@ export const CONSTANTS = {
   },
   memories: {
     title: "Our Love Diary 📖",
-    subtitle: "Shreya & Rohit's special moments and future dreams ✨",
+    subtitle: "{{partner}} & {{me}}'s special moments and future dreams ✨",
     wishTab: "Make a Wish",
     memoryTab: "Add Memory",
     wishPlaceholder: "E.g., Trip to Switzerland... ✈️",
